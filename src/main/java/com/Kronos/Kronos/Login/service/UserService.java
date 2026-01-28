@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
 import com.Kronos.Kronos.Login.model.User;
 import com.Kronos.Kronos.Login.repository.UserRepository;
 
@@ -18,8 +19,18 @@ public class UserService {
     }
 
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserRequestDTO createUser(UserRequestDTO dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+
+        User savedUser = userRepository.save(user);
+  
+
+        UserRequestDTO responseDto = new UserRequestDTO();
+        responseDto.setUsername(savedUser.getUsername());
+        responseDto.setPassword("*********");
+        return responseDto;
     }
 
     public List<User> getAllUsers() {

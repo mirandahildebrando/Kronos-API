@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
 import com.Kronos.Kronos.Login.model.User;
 import com.Kronos.Kronos.Login.service.UserService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserRequestDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
+        UserRequestDTO createdUser = userService.createUser(dto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -53,8 +56,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        User createUser = userService.createUser(user);
+    public ResponseEntity<UserRequestDTO> updateUser(@RequestBody UserRequestDTO dto) {
+        UserRequestDTO createUser = userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
     }
 

@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Logs
+*.log
+
+# Java
+target/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml

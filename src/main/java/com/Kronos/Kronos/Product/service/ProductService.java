@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
 import com.Kronos.Kronos.Product.dtos.ProductDto;
 import com.Kronos.Kronos.Product.model.Product;
 import com.Kronos.Kronos.Product.repository.ProductRepository;
@@ -33,7 +34,7 @@ public class ProductService {
         return responseDto;
     }
 
-    public List<Product> getallProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
@@ -41,15 +42,19 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product updateProduct(Long id, Product productDetails) {
-        return productRepository.findById(id)
-        .map(product -> {
-            product.setName(productDetails.getName());
-            product.setPrice(productDetails.getPrice());
-            product.setQuantity(productDetails.getQuantity());
-            return productRepository.save(product);
-        }).orElse(null);
-    }
+    public ProductDto updateProduct(Long id, ProductDto dto) {
+    Product product = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    product.setName(dto.getName());
+    product.setPrice(dto.getPrice());
+    product.setQuantity(dto.getQuantity());
+
+    productRepository.save(product);
+
+    return dto;
+}
+
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);

@@ -55,11 +55,15 @@ public class UserController {
 
     }
 
-    @PutMapping
-    public ResponseEntity<UserRequestDTO> updateUser(@RequestBody UserRequestDTO dto) {
-        UserRequestDTO createUser = userService.createUser(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
+    @PutMapping("/{id}")
+        public ResponseEntity<UserRequestDTO> updateUser(
+        @PathVariable Long id,
+        @RequestBody UserRequestDTO dto) {
+
+       UserRequestDTO updatedUser = userService.updateUser(id, dto);
+       return ResponseEntity.ok(updatedUser);
     }
+
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

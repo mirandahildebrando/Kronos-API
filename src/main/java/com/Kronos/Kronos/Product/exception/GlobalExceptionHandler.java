@@ -1,4 +1,4 @@
-package com.Kronos.Kronos.Login.exception;
+package com.Kronos.Kronos.Product.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
+import com.Kronos.Kronos.Login.dtos.UserDTO;
 import com.Kronos.Kronos.Login.model.User;
 import com.Kronos.Kronos.Login.repository.UserRepository;
 
@@ -20,17 +20,18 @@ public class UserService {
     }
 
 
-    public UserRequestDTO createUser(UserRequestDTO dto) {
+    public UserDTO createUser(UserDTO dto) {
         User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
+        user.setUsername(dto.username());
+        user.setPassword(dto.password());
 
         User savedUser = userRepository.save(user);
   
 
-        UserRequestDTO responseDto = new UserRequestDTO();
-        responseDto.setUsername(savedUser.getUsername());
-        responseDto.setPassword("*********");
+        UserDTO responseDto = new UserDTO(
+                savedUser.getUsername(),
+                "*********"
+        );
         return responseDto;
     }
 
@@ -39,13 +40,13 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public UserRequestDTO updateUser(Long id, UserRequestDTO dto) {
+    public UserDTO updateUser(Long id, UserDTO dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
+        user.setUsername(dto.username());
+        user.setPassword(dto.password());
         userRepository.save(user);
         return dto;
     }

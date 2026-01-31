@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
+
 import com.Kronos.Kronos.Product.dtos.ProductDto;
 import com.Kronos.Kronos.Product.model.Product;
 import com.Kronos.Kronos.Product.repository.ProductRepository;
@@ -21,16 +21,17 @@ public class ProductService {
 
     public ProductDto createProduct(ProductDto dto) {
         Product product = new Product();
-        product.setName(dto.getName());
-        product.setPrice(dto.getPrice());
-        product.setQuantity(dto.getQuantity());
+        product.setName(dto.name());
+        product.setPrice(dto.price());
+        product.setQuantity(dto.quantity());
 
         Product savedProduct = productRepository.save(product);
 
-        ProductDto responseDto = new ProductDto();
-        responseDto.setName(savedProduct.getName());
-        responseDto.setPrice(savedProduct.getPrice());
-        responseDto.setQuantity(savedProduct.getQuantity());
+        ProductDto responseDto = new ProductDto(
+                savedProduct.getName(),
+                savedProduct.getPrice(),
+                savedProduct.getQuantity()
+        );
         return responseDto;
     }
 
@@ -46,9 +47,9 @@ public class ProductService {
     Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    product.setName(dto.getName());
-    product.setPrice(dto.getPrice());
-    product.setQuantity(dto.getQuantity());
+    product.setName(dto.name());
+    product.setPrice(dto.price());
+    product.setQuantity(dto.quantity());
 
     productRepository.save(product);
 

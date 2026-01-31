@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Kronos.Kronos.Login.dtos.UserRequestDTO;
+import com.Kronos.Kronos.Login.dtos.UserDTO;
 import com.Kronos.Kronos.Login.model.User;
 import com.Kronos.Kronos.Login.service.UserService;
 
@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserRequestDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
-        UserRequestDTO createdUser = userService.createUser(dto);
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO dto) {
+        UserDTO createdUser = userService.createUser(dto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -56,11 +56,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-        public ResponseEntity<UserRequestDTO> updateUser(
+        public ResponseEntity<UserDTO> updateUser(
         @PathVariable Long id,
-        @RequestBody UserRequestDTO dto) {
+        @RequestBody UserDTO dto) {
 
-       UserRequestDTO updatedUser = userService.updateUser(id, dto);
+       UserDTO updatedUser = userService.updateUser(id, dto);
        return ResponseEntity.ok(updatedUser);
     }
 

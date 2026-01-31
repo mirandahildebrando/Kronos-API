@@ -20,9 +20,8 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-    private String productName;
-    private LocalDateTime saleDate;
-    private Double amount;
+    private LocalDateTime saleDate = LocalDateTime.now();
+    private Double totalValue;
     private String paymentMethod;
 
 }

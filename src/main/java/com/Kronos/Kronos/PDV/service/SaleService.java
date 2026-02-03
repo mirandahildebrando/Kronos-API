@@ -34,13 +34,13 @@ public class SaleService {
     }
 
     public Sale getSaleById(Long id) {
-        return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("Sale not found"));
+        return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("Venda não encontrada"));
 
     }
 
     public SaleDTO updateSale(Long id, SaleDTO dto) {
         Sale sale = saleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sale not found"));
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
 
         sale.setPaymentMethod(dto.paymentMethod());
         sale.setTotalValue(sale.getTotalValue());

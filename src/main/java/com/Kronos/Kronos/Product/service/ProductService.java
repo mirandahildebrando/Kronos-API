@@ -40,7 +40,7 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public ProductDto updateProduct(Long id, ProductDto dto) {

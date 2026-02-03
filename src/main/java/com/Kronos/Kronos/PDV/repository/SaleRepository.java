@@ -8,4 +8,7 @@ import com.Kronos.Kronos.PDV.model.Sale;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
+    public Sale findById(long id);
+    public Sale deleteById(long id);
+
 }

@@ -18,6 +18,7 @@ public class ItemSale {
 
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "sale_id")
     private Sale sale;
     @ManyToOne
     private Product product;

@@ -8,4 +8,6 @@ import com.Kronos.Kronos.Register.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    public void deleteById(Long id);
+
 }

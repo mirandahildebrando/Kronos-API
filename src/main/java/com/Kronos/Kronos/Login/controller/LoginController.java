@@ -20,11 +20,12 @@ public class LoginController {
     
     }
 
-    @PostMapping("/login")
+    @PostMapping("/log")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO dto) {
         String response = loginService.login(dto);
         return ResponseEntity.ok(response);
     }
+
 
 
 

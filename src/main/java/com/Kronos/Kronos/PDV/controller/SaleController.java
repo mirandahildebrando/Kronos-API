@@ -31,7 +31,6 @@ public class SaleController {
     @PostMapping
     public ResponseEntity<Sale> finalSale(@RequestBody SaleDTO saleDTO) {
         Sale sale = saleService.finalSale(saleDTO);
-        SaleDTO responseDto = new SaleDTO();
         return ResponseEntity.status(HttpStatus.CREATED).body(sale);
     }
 

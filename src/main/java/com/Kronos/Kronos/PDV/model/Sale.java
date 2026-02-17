@@ -3,6 +3,8 @@ package com.Kronos.Kronos.PDV.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,7 +25,8 @@ public class Sale {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime saleDate = LocalDateTime.now();
-    @OneToMany()
+    @OneToMany(mappedBy = "sale")
+    @JsonIgnore
     private List<ItemSale> items;
     private Double totalValue;
     private String paymentMethod;

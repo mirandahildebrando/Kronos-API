@@ -1,4 +1,4 @@
-package com.Kronos.Kronos.Login.model;
+package com.Kronos.Kronos.Register.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

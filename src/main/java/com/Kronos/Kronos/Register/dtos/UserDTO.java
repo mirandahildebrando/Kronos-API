@@ -1,4 +1,4 @@
-package com.Kronos.Kronos.Login.dtos;
+package com.Kronos.Kronos.Register.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

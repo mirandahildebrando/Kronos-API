@@ -3,6 +3,7 @@ package com.Kronos.Kronos.PDV.model;
 import com.Kronos.Kronos.Product.model.Product;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.Kronos.Kronos.Login.controller;
+package com.Kronos.Kronos.Register.controller;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Kronos.Kronos.Login.dtos.UserDTO;
-import com.Kronos.Kronos.Login.model.User;
-import com.Kronos.Kronos.Login.service.UserService;
+import com.Kronos.Kronos.Register.dtos.UserDTO;
+import com.Kronos.Kronos.Register.model.User;
+import com.Kronos.Kronos.Register.service.UserService;
 
 import jakarta.validation.Valid;
 

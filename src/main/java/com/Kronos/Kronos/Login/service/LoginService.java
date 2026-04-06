@@ -25,7 +25,4 @@ public class LoginService {
             return "Login realizado com sucesso!";
         }
     }
-
-    public
-
 }

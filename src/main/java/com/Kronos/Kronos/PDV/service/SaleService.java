@@ -2,6 +2,7 @@ package com.Kronos.Kronos.PDV.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import com.Kronos.Kronos.PDV.model.ItemSale;
 import com.Kronos.Kronos.PDV.model.Sale;
 import com.Kronos.Kronos.PDV.repository.ItemSaleRepository;
 import com.Kronos.Kronos.PDV.repository.SaleRepository;
+import com.Kronos.Kronos.Product.model.Product;
 import com.Kronos.Kronos.Product.repository.ProductRepository;
 
 @Service
@@ -27,6 +29,45 @@ public class SaleService {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.itemSaleRepository = itemSaleRepository;
+    }
+
+    public Sale createSale(SaleDTO dto) {
+        
+        Sale sale = new Sale();
+        sale.setPaymentMethod(dto.paymentMethod());
+        sale.setTotalValue(0.0);
+        sale = saleRepository.save(sale);
+
+        double totalValue = 0.0;
+
+        for (OrderItemDTO itemDTO : dto.items()) {
+
+            Product product;
+            
+            if(itemDTO.productId() != null) {
+                product = productRepository.findById(itemDTO.productId()).get();
+            }
+            else {
+                throw new RuntimeException("Produto não encontrado: ID " + itemDTO.productId());
+            }
+        
+
+            ItemSale itemSale = new ItemSale();
+            itemSale.setSale(sale);
+            itemSale.setProduct(product);
+            itemSale.setQuantity(itemDTO.quantity());
+            itemSale.setUnitPrice(product.getPrice());
+
+            itemSaleRepository.save(itemSale);
+            totalValue += itemSale.getUnitPrice() * itemSale.getQuantity();
+
+        }
+
+        sale.setTotalValue(totalValue);
+        saleRepository.save(sale);
+
+        return sale;
+
     }
 
     public List<Sale> getAllSales() {

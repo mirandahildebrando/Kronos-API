@@ -55,6 +55,9 @@ public class SaleService {
             ItemSale itemSale = new ItemSale();
             itemSale.setSale(sale);
             itemSale.setProduct(product);
+            if(product.getQuantity() < itemDTO.quantity()) {
+                throw new RuntimeException("Estoque insuficiente para o produto: " + product.getName());
+            }
             itemSale.setQuantity(itemDTO.quantity());
             itemSale.setUnitPrice(product.getPrice());
 
@@ -134,6 +137,5 @@ public class SaleService {
     sale.setTotalValue(totalValue);
     return saleRepository.save(sale);
 
-    
 }
 }

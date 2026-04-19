@@ -2,6 +2,7 @@ package com.Kronos.Kronos.Product.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -36,7 +37,8 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        Sort sort = Sort.by("name").ascending();
+        return productRepository.findAll(sort);
     }
 
     public Product getProductById(Long id) {

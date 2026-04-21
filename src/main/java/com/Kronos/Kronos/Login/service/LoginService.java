@@ -1,6 +1,8 @@
 package com.Kronos.Kronos.Login.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.Kronos.Kronos.Login.dtos.LoginRequestDTO;
 import com.Kronos.Kronos.Login.model.Login;
@@ -16,13 +18,16 @@ public class LoginService {
     }
 
     public String login(LoginRequestDTO dto) {
-        Login login = loginRepository.findByUsername(dto.username())
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if(!login.getPassword().equals(dto.password())) {
-            throw new RuntimeException("Senha inválida");
-        } else {
-            return "Login realizado com sucesso!";
+        Login login = loginRepository.findByUsername(dto.username())
+            .orElseThrow(() -> 
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+            );
+
+        if (!login.getPassword().equals(dto.password())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha inválida");
         }
+
+        return "Login realizado com sucesso!";
     }
 }

@@ -10,7 +10,7 @@ import com.Kronos.Kronos.Login.dtos.LoginRequestDTO;
 import com.Kronos.Kronos.Login.service.LoginService;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class LoginController {
 
     private final LoginService loginService;
@@ -20,13 +20,10 @@ public class LoginController {
     
     }
 
-    @PostMapping("/log")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO dto) {
         String response = loginService.login(dto);
         return ResponseEntity.ok(response);
     }
-
-
-
 
 }

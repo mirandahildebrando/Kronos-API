@@ -19,15 +19,17 @@ public class LoginService {
 
     public String login(LoginRequestDTO dto) {
 
-        Login login = loginRepository.findByUsername(dto.username())
+        Login login = loginRepository.findByUsername(dto.getUsername())
             .orElseThrow(() -> 
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
             );
 
-        if (!login.getPassword().equals(dto.password())) {
+        if (!login.getPassword().equals(dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha inválida");
         }
 
         return "Login realizado com sucesso!";
     }
+
+
 }

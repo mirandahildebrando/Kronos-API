@@ -22,8 +22,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO dto) {
-        String response = loginService.login(dto);
-        return ResponseEntity.ok(response);
-    }
+    System.out.println("ENTROU NO CONTROLLER");
+    System.out.println("username: " + dto.getUsername());
+    return ResponseEntity.ok("ok");
+    } 
 
 }

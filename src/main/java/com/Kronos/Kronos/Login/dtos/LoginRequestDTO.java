@@ -1,21 +1,25 @@
 package com.Kronos.Kronos.Login.dtos;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Data;
-
-@Data
 public class LoginRequestDTO {
+
     private String username;
     private String password;
 
-    @JsonCreator
-    public LoginRequestDTO(
-        @JsonProperty("username") String username,
-        @JsonProperty("password") String password
-    ) {
+    public LoginRequestDTO() {}
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 }

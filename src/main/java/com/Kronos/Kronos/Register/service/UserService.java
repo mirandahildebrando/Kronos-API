@@ -20,8 +20,8 @@ public class UserService {
 
     public UserDTO createUser(UserDTO dto) {
         User user = new User();
-        user.setUsername(dto.username());
-        user.setPassword(dto.password());
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
 
         User savedUser = userRepository.save(user);
   
@@ -43,8 +43,8 @@ public class UserService {
 
     public UserDTO updateUser(Long id, UserDTO dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        user.setUsername(dto.username());
-        user.setPassword(dto.password());
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
         userRepository.save(user);
         return dto;
     }

@@ -1,5 +1,6 @@
 package com.Kronos.Kronos.Register.controller;
 
+import com.Kronos.Kronos.Register.repository.UserRepository;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -28,14 +29,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @CrossOrigin(origins = "*")
 public class UserController {
 
+    private final Kronos.Kronos.Register.repository.UserRepository userRepository;
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, Kronos.Kronos.Register.repository.UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
         UserDTO createdUser = userService.createUser(dto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -68,9 +71,9 @@ public class UserController {
 
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    public String resetUsers() {
+        userRepository.deleteAll();
+        return "Todos os usuários foram deletados.";
     }
 
 }

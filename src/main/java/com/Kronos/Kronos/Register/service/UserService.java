@@ -17,20 +17,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
     public UserDTO createUser(UserDTO dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
 
         User savedUser = userRepository.save(user);
-  
 
-        UserDTO responseDto = new UserDTO(
+        return new UserDTO(
                 savedUser.getUsername(),
                 "*********"
         );
-        return responseDto;
     }
 
     public List<User> getAllUsers() {
@@ -38,23 +35,30 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
     public UserDTO updateUser(Long id, UserDTO dto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
+
         userRepository.save(user);
+
         return dto;
     }
 
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("Usuário não encontrado");
-        } else {
-            userRepository.deleteById(id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
     }
 }
-
-    }

@@ -7,24 +7,25 @@ import org.springframework.web.server.ResponseStatusException;
 import com.Kronos.Kronos.Login.dtos.LoginRequestDTO;
 import com.Kronos.Kronos.Login.model.Login;
 import com.Kronos.Kronos.Login.repository.LoginRepository;
+import com.Kronos.Kronos.Register.repository.UserRepository;
 
 @Service
 public class LoginService {
 
-    private final LoginRepository loginRepository;
+    private final UserRepository userRepository;
 
-    public LoginService(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    public LoginService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public String login(LoginRequestDTO dto) {
 
-        Login login = loginRepository.findByUsername(dto.getUsername())
+        User user = userRepository.findByUsername(dto.getUsername())
             .orElseThrow(() -> 
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
             );
 
-        if (!login.getPassword().equals(dto.getPassword())) {
+        if (!user.getPassword().equals(dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha inválida");
         }
 

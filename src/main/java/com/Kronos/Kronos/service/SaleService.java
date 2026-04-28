@@ -15,8 +15,6 @@ import com.Kronos.Kronos.repository.ItemSaleRepository;
 import com.Kronos.Kronos.repository.ProductRepository;
 import com.Kronos.Kronos.repository.SaleRepository;
 
-
-
 @Service
 public class SaleService {
 
@@ -54,7 +52,7 @@ public class SaleService {
                         "Estoque insuficiente para o produto: " + product.getName());
             }
 
-           
+            // baixa estoque
             product.setQuantity(product.getQuantity() - itemDTO.quantity());
             productRepository.save(product);
 
@@ -89,20 +87,38 @@ public class SaleService {
         return toDTO(sale);
     }
 
+    public SaleDTO updateSale(Long id, SaleDTO dto) {
+
+        Sale sale = saleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
+
+        sale.setPaymentMethod(dto.paymentMethod());
+        sale.setTotalValue(dto.totalValue());
+
+        sale = saleRepository.save(sale);
+
+        return toDTO(sale);
+    }
+
     public void deleteSale(Long id) {
         saleRepository.deleteById(id);
     }
 
     private SaleDTO toDTO(Sale sale) {
+
+        List<OrderItemDTO> items = sale.getItems() != null
+                ? sale.getItems().stream()
+                    .map(item -> new OrderItemDTO(
+                            item.getProduct().getId(),
+                            item.getQuantity()
+                    ))
+                    .collect(Collectors.toList())
+                : List.of();
+
         return new SaleDTO(
                 sale.getPaymentMethod(),
                 sale.getTotalValue(),
-                sale.getItems().stream()
-                        .map(item -> new OrderItemDTO(
-                                item.getProduct().getId(),
-                                item.getQuantity()
-                        ))
-                        .collect(Collectors.toList())
+                items
         );
     }
 }

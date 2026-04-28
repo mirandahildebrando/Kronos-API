@@ -1,124 +1,137 @@
-# Kronos - Sistema de PDV para Empresas
+# Kronos API - Sistema de Gestão (PDV + Estoque)
 
-Projeto backend do sistema Kronos, que serve como API para o PDV, controle de estoque e login de usuários.  
-O projeto é dividido em módulos dentro do mesmo projeto para facilitar manutenção e expansão.
+API REST desenvolvida em Java com Spring Boot para gerenciamento de usuários, produtos e vendas (PDV), com controle de estoque e regras de negócio.
 
----
-
-## Estrutura do projeto
-
-Kronos/
-│
-├─ Login/ # Módulo de autenticação e gerenciamento de usuários
-│ ├─ controller/
-│ ├─ service/
-│ ├─ repository/
-│ ├─ model/
-│ └─ dtos/
-│
-├─ PDV/ # Módulo do ponto de venda (em desenvolvimento)
-│ ├─ controller/
-│ ├─ service/
-│ ├─ repository/
-│ ├─ model/
-│ └─ dtos/
-│
-├─ Estoque/ # Módulo de controle de estoque (em desenvolvimento)
-│ ├─ controller/
-│ ├─ service/
-│ ├─ repository/
-│ ├─ model/
-│ └─ dtos/
-│
-├─ pom.xml
-└─ src/main/resources/application.properties
-
+A aplicação foi projetada com foco em uso real, seguindo boas práticas de arquitetura em camadas e padronização de respostas.
 
 ---
 
-## Tecnologias usadas
+## 🌐 Ambiente
+
+API disponível em produção:
+
+👉 https://kronos-api-ck9x.onrender.com
+
+Documentação Swagger:
+
+👉 https://kronos-api-ck9x.onrender.com/swagger-ui/index.html
+
+---
+
+## 🚀 Tecnologias
 
 - Java 17
 - Spring Boot
+- Spring Web
+- Spring Data JPA
 - PostgreSQL
 - Maven
-- Swagger (para testes da API)
-- Jakarta Validation (para validação de campos)
+- Docker
+- OpenAPI / Swagger
 
 ---
 
-## Como rodar o projeto
+## 🧩 Arquitetura
 
-1. Clone o repositório:
-```bash
-git clone https://github.com/seuusuario/kronos.git
-Entre na pasta do projeto:
+A aplicação segue arquitetura em camadas:
 
-cd kronos
-Configure o banco de dados PostgreSQL no arquivo src/main/resources/application.properties:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/nome_do_banco
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-spring.jpa.hibernate.ddl-auto=update
-Rode o projeto:
+controller → service → repository
 
+
+Separação por responsabilidade:
+
+- Controller: entrada/saída da API
+- Service: regras de negócio
+- Repository: acesso ao banco
+- DTOs: transporte de dados
+- Entities: persistência
+
+---
+
+## 📌 Módulos da API
+
+### 🔐 Autenticação
+- `POST /auth/login`
+
+---
+
+### 👤 Usuários
+- `POST /users`
+- `GET /users`
+- `GET /users/byId?id={id}`
+- `PUT /users/{id}`
+- `DELETE /users/reset`
+
+---
+
+### 📦 Produtos
+- `POST /products`
+- `GET /products`
+- `GET /products/{id}`
+- `PUT /products/{id}`
+- `DELETE /products/{id}`
+
+---
+
+### 💰 Vendas (PDV)
+- `POST /sales`
+- `GET /sales`
+- `GET /sales/{id}`
+- `PUT /sales/{id}`
+- `DELETE /sales/{id}`
+
+---
+
+## ⚙️ Regras de negócio
+
+- Controle de estoque em tempo real
+- Bloqueio de venda com estoque insuficiente
+- Atualização automática do estoque após venda
+- Cálculo automático do valor total da venda
+- Estrutura baseada em DTO para desacoplamento
+
+---
+
+## 📤 Padrão de resposta
+
+A API utiliza um padrão consistente de retorno:
+
+```json
+{
+  "data": {},
+  "message": "Mensagem da operação"
+}
+📦 Exemplo de requisição (Venda)
+POST /sales
+
+{
+  "paymentMethod": "PIX",
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    }
+  ]
+}
+📥 Exemplo de resposta
+{
+  "data": {
+    "paymentMethod": "PIX",
+    "totalValue": 100.0,
+    "items": [
+      {
+        "productId": 1,
+        "quantity": 2
+      }
+    ]
+  },
+  "message": "Venda criada com sucesso"
+}
+🧪 Execução local
+git clone https://github.com/mirandahildebrando/Kronos-API
+cd kronos-api
 mvn spring-boot:run
-Abra o Swagger para testar a API:
-
-http://localhost:8080/swagger-ui/index.html
-Endpoints do módulo Login
-Criar usuário
-POST /users
-Request:
-
-{
-  "username": "meuusuario",
-  "password": "minhasenha123"
-}
-Validações:
-
-username: obrigatório, 5-30 caracteres
-
-password: obrigatório, 8-20 caracteres
-
-Listar todos usuários
-GET /users
-
-Buscar usuário por ID
-GET /users/byId?id={id}
-
-Atualizar usuário
-PUT /users
-Request:
-
-{
-  "id": 1,
-  "username": "usuarioatualizado",
-  "password": "novasenha123"
-}
-Deletar usuário
-DELETE /users/{id}
-
-Como organizar novos módulos (PDV, Estoque)
-Crie uma pasta dentro de Kronos/ com o nome do módulo (ex: PDV/ ou Estoque/).
-
-Dentro do módulo, siga a mesma estrutura:
-
-controller/
-service/
-repository/
-model/
-dtos/
-Crie as classes e endpoints seguindo o padrão do módulo Login.
-
-Adicione os endpoints ao Swagger (Springfox ou Springdoc) para testar.
-
-Boas práticas
-Valide sempre os campos obrigatórios antes de enviar ao backend.
-
-Senhas devem ter no mínimo 8 caracteres e máximo 20.
-
-Username deve ter no mínimo 5 caracteres e máximo 30.
-
-Mantenha os módulos separados para facilitar manutenção e testes.
+🐳 Docker
+docker build -t kronos-api .
+docker run -p 8080:8080 kronos-api

@@ -1,5 +1,6 @@
 package com.Kronos.Kronos.controller;
 
+import com.Kronos.Kronos.dtos.APIResponse;
 import com.Kronos.Kronos.dtos.UserDTO;
 import com.Kronos.Kronos.entity.User;
 import com.Kronos.Kronos.repository.UserRepository;
@@ -27,32 +28,32 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
+    public ResponseEntity<APIResponse<UserDTO>> createUser(@RequestBody UserDTO dto) {
         UserDTO createdUser = userService.createUser(dto);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new APIResponse<>(createdUser, "Usuário criado com sucesso"));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<APIResponse<List<User>>> getAllUsers() {
+        return ResponseEntity.ok(new APIResponse<>(userService.getAllUsers(), "Lista de usuários retornada com sucesso"));
     }
 
     @GetMapping("/byId")
-    public ResponseEntity<User> getUserById(@RequestParam Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<APIResponse<User>> getUserById(@RequestParam Long id) {
+        return ResponseEntity.ok(new APIResponse<>(userService.getUserById(id), "Usuário retornado com sucesso"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(
+    public ResponseEntity<APIResponse<UserDTO>> updateUser(
             @PathVariable Long id,
             @RequestBody UserDTO dto) {
 
-        return ResponseEntity.ok(userService.updateUser(id, dto));
+        return ResponseEntity.ok(new APIResponse<>(userService.updateUser(id, dto), "Usuário atualizado com sucesso"));
     }
 
     @DeleteMapping("/reset")
-    public ResponseEntity<String> resetUsers() {
+    public ResponseEntity<APIResponse<String>> resetUsers() {
         userRepository.deleteAll();
-        return ResponseEntity.ok("Todos os usuários foram deletados.");
+        return ResponseEntity.ok(new APIResponse<>(null, "Todos os usuários foram deletados."));
     }
 }

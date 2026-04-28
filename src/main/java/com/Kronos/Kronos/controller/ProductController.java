@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Kronos.Kronos.dtos.APIResponse;
 import com.Kronos.Kronos.dtos.ProductDto;
-import com.Kronos.Kronos.entity.Product;
 import com.Kronos.Kronos.service.ProductService;
+
+import io.swagger.v3.oas.models.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/products")
@@ -29,33 +30,41 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto dto) {
+    public ResponseEntity<APIResponse<ProductDto>> createProduct(@RequestBody ProductDto dto) {
         ProductDto createProduct = productService.createProduct(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createProduct);
+        return ResponseEntity.ok(
+        new APIResponse<>(createProduct, "Produto criado com sucesso")
+);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    public ResponseEntity<APIResponse<List<ProductDto>>> getAllProducts() {
         List<ProductDto> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(
+            new APIResponse<>(products, "Lista de produtos retornada com sucesso")
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<ProductDto>> getProductById(@PathVariable Long id) {
         ProductDto product = productService.getProductById(id);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(
+            new APIResponse<>(product, "Produto retornado com sucesso")
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto dto) {
+    public ResponseEntity<APIResponse<ProductDto>> updateProduct(@PathVariable Long id, @RequestBody ProductDto dto) {
         ProductDto updateProduct = productService.updateProduct(id, dto);
-        return ResponseEntity.ok(updateProduct);
+        return ResponseEntity.ok(
+            new APIResponse<>(updateProduct, "Produto atualizado com sucesso")
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<Void>> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new APIResponse<>(null, "Produto deletado com sucesso"));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.Kronos.Kronos.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,126 +18,91 @@ import com.Kronos.Kronos.repository.SaleRepository;
 
 
 @Service
-public class SaleService { 
+public class SaleService {
 
     private final SaleRepository saleRepository;
-
     private final ProductRepository productRepository;
-
     private final ItemSaleRepository itemSaleRepository;
 
-
-    public SaleService(SaleRepository saleRepository, ProductRepository productRepository, ItemSaleRepository itemSaleRepository) {
+    public SaleService(SaleRepository saleRepository,
+                       ProductRepository productRepository,
+                       ItemSaleRepository itemSaleRepository) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.itemSaleRepository = itemSaleRepository;
     }
 
-    public Sale createSale(SaleDTO dto) {
-        
+    @Transactional
+    public SaleDTO createSale(SaleDTO dto) {
+
         Sale sale = new Sale();
         sale.setPaymentMethod(dto.paymentMethod());
         sale.setTotalValue(0.0);
+
         sale = saleRepository.save(sale);
 
         double totalValue = 0.0;
 
         for (OrderItemDTO itemDTO : dto.items()) {
 
-            Product product;
-            
-            if(itemDTO.productId() != null) {
-                product = productRepository.findById(itemDTO.productId()).get();
+            Product product = productRepository.findById(itemDTO.productId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Produto não encontrado: ID " + itemDTO.productId()));
+
+            if (product.getQuantity() < itemDTO.quantity()) {
+                throw new RuntimeException(
+                        "Estoque insuficiente para o produto: " + product.getName());
             }
-            else {
-                throw new RuntimeException("Produto não encontrado: ID " + itemDTO.productId());
-            }
-        
+
+           
+            product.setQuantity(product.getQuantity() - itemDTO.quantity());
+            productRepository.save(product);
 
             ItemSale itemSale = new ItemSale();
             itemSale.setSale(sale);
             itemSale.setProduct(product);
-            if(product.getQuantity() < itemDTO.quantity()) {
-                throw new RuntimeException("Estoque insuficiente para o produto: " + product.getName());
-            }
             itemSale.setQuantity(itemDTO.quantity());
             itemSale.setUnitPrice(product.getPrice());
 
             itemSaleRepository.save(itemSale);
-            totalValue += itemSale.getUnitPrice() * itemSale.getQuantity();
 
+            totalValue += product.getPrice() * itemDTO.quantity();
         }
 
         sale.setTotalValue(totalValue);
         saleRepository.save(sale);
 
-        return sale;
-
+        return toDTO(sale);
     }
 
-    public List<Sale> getAllSales() {
-        return saleRepository.findAll();
+    public List<SaleDTO> getAllSales() {
+        return saleRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Sale getSaleById(Long id) {
-        return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("Venda não encontrada"));
-
-    }
-
-    public SaleDTO updateSale(Long id, SaleDTO dto) {
+    public SaleDTO getSaleById(Long id) {
         Sale sale = saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
 
-        sale.setPaymentMethod(dto.paymentMethod());
-        sale.setTotalValue(sale.getTotalValue());
-
-
-        saleRepository.save(sale);
-
-        return dto;
+        return toDTO(sale);
     }
 
     public void deleteSale(Long id) {
         saleRepository.deleteById(id);
     }
 
-    @Transactional
-    public Sale finalSale(SaleDTO saleDTO) {
-    Sale sale = new Sale();
-    sale.setPaymentMethod(saleDTO.paymentMethod());
-    sale.setTotalValue(0.0);
-    sale = saleRepository.save(sale);
-
-    Double totalValue = 0.0;
-
-    for (OrderItemDTO itemDTO : saleDTO.items()) {
-        var product = productRepository.findById(itemDTO.productId())
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado: ID " + itemDTO.productId()));
-
-       
-        if (product.getQuantity() < itemDTO.quantity()) {
-            throw new RuntimeException("Estoque insuficiente para o produto: " + product.getName());
-        }
-
-        
-        product.setQuantity(product.getQuantity() - itemDTO.quantity());
-        productRepository.save(product); 
-
-        var itemSale = new ItemSale();
-        itemSale.setSale(sale);
-        itemSale.setProduct(product);
-        itemSale.setQuantity(itemDTO.quantity());
-        itemSale.setUnitPrice(product.getPrice());
-        
-        
-        itemSaleRepository.save(itemSale);
-
-        totalValue += product.getPrice() * itemDTO.quantity();
+    private SaleDTO toDTO(Sale sale) {
+        return new SaleDTO(
+                sale.getPaymentMethod(),
+                sale.getTotalValue(),
+                sale.getItems().stream()
+                        .map(item -> new OrderItemDTO(
+                                item.getProduct().getId(),
+                                item.getQuantity()
+                        ))
+                        .collect(Collectors.toList())
+        );
     }
-
-    
-    sale.setTotalValue(totalValue);
-    return saleRepository.save(sale);
-
-}
 }

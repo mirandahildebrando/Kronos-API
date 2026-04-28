@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ import com.Kronos.Kronos.dtos.SaleDTO;
 import com.Kronos.Kronos.entity.Sale;
 import com.Kronos.Kronos.service.SaleService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 
 @RestController
 @RequestMapping("/sales")
@@ -29,18 +30,18 @@ public class SaleController {
     }
 
     @PostMapping
-    public ResponseEntity<Sale> finalSale(@RequestBody SaleDTO saleDTO) {
-        Sale sale = saleService.finalSale(saleDTO);
+    public ResponseEntity<SaleDTO> createSale(@RequestBody SaleDTO saleDTO) {
+        SaleDTO sale = saleService.createSale(saleDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(sale);
     }
 
     @GetMapping
-    public ResponseEntity<List<Sale>> getAllSales() {
+    public ResponseEntity<List<SaleDTO>> getAllSales() {
         return ResponseEntity.ok(saleService.getAllSales());
     }
 
     @GetMapping("/{id}")
-    public Sale getSaleBydId(@PathVariable Long id) {
+    public SaleDTO getSaleById(@PathVariable Long id) {
         return saleService.getSaleById(id);
     }
 

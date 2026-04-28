@@ -1,6 +1,7 @@
 package com.Kronos.Kronos.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import com.Kronos.Kronos.entity.Product;
 import com.Kronos.Kronos.repository.ProductRepository;
 
 @Service
-
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -27,40 +27,54 @@ public class ProductService {
         product.setQuantity(dto.quantity());
 
         Product savedProduct = productRepository.save(product);
-
-        ProductDto responseDto = new ProductDto(
-                savedProduct.getName(),
-                savedProduct.getPrice(),
-                savedProduct.getQuantity()
-        );
-        return responseDto;
+        return toDTO(savedProduct);
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         Sort sort = Sort.by("name").ascending();
-        return productRepository.findAll(sort);
+
+        return productRepository.findAll(sort)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+    public ProductDto getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        return toDTO(product);
     }
 
     public ProductDto updateProduct(Long id, ProductDto dto) {
-    Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-    product.setName(dto.name());
-    product.setPrice(dto.price());
-    product.setQuantity(dto.quantity());
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-    productRepository.save(product);
+        // NÃO mexe no ID
+        product.setName(dto.name());
+        product.setPrice(dto.price());
+        product.setQuantity(dto.quantity());
 
-    return dto;
-}
+        Product updated = productRepository.save(product);
 
+        return toDTO(updated);
+    }
 
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Produto não encontrado");
+        }
+
         productRepository.deleteById(id);
     }
 
+    private ProductDto toDTO(Product product) {
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getQuantity()
+        );
+    }
 }

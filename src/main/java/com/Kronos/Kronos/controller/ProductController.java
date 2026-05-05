@@ -2,7 +2,6 @@ package com.Kronos.Kronos.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ import com.Kronos.Kronos.dtos.APIResponse;
 import com.Kronos.Kronos.dtos.ProductDto;
 import com.Kronos.Kronos.service.ProductService;
 
-import io.swagger.v3.oas.models.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/products")

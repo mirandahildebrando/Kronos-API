@@ -2,6 +2,7 @@ package com.Kronos.Kronos.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Kronos.Kronos.dtos.APIResponse;
 import com.Kronos.Kronos.dtos.LoginRequestDTO;
 import com.Kronos.Kronos.service.LoginService;
 
@@ -24,9 +25,9 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<APIResponse<String>> login(@RequestBody LoginRequestDTO dto) {
     String response = loginService.login(dto);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(new APIResponse<>(response, "Login realizado com sucesso"));
     }
 
 }

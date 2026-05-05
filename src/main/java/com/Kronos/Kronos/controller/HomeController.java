@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect: https://kronos-api-ck9x.onrender.com/swagger-ui/index.html";
+        return "redirect:/swagger-ui/index.html";
     }
 }

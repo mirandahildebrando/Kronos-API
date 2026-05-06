@@ -56,4 +56,10 @@ public class UserController {
         userRepository.deleteAll();
         return ResponseEntity.ok(new APIResponse<>(null, "Todos os usuários foram deletados."));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<APIResponse<String>> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new APIResponse<>(null, "Usuário deletado com sucesso"));
+    }
 }
